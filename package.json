@@ -5,6 +5,9 @@
   "repository": {
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
+  "publishConfig": {
+    "@idangib:registry": "https://npm.pkg.github.com"
+  },
   "main": "dist/index.js",
   "scripts": {
     "test": "exit 0"
