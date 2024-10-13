@@ -3,12 +3,14 @@
   "version": "1.0.3",
   "description": "children budget application",
   "repository": {
+    "type": "github",
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
+  "types": "./dist/index",
   "publishConfig": {
     "@idangib:registry": "https://npm.pkg.github.com"
   },
-  "main": "dist/index.js",
+  "main": "dist/index",
   "scripts": {
     "test": "exit 0",
     "build": "npx tsc",
