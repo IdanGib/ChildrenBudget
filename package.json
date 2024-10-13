@@ -1,0 +1,14 @@
+{
+  "name": "@idangib/childrenbudget",
+  "version": "1.0.0",
+  "description": "children budget application",
+  "repository": {
+    "url": "https://github.com/IdanGib/ChildrenBudget.git"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "author": "idangibly",
+  "license": "ISC"
+}
