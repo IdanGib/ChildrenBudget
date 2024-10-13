@@ -10,8 +10,13 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "test": "exit 0"
+    "test": "exit 0",
+    "build": "npx tsc",
+    "postinstall": "npm run build"
   },
   "author": "idangibly",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^5.6.3"
+  }
 }
