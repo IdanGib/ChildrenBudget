@@ -27,7 +27,6 @@ export interface Child extends Common {
 
 export interface Transaction extends Common  {
     price: number;
-    currency: string;
     title: string;
     description: string;
     date: Date;
