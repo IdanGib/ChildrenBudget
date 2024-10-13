@@ -1,7 +1,14 @@
-import { MySqlClient } from '@/database/mysql.client';
+import { DbClientsMap } from "./database/database.index";
+import { ChildrenBudgetArgs } from "./interface/children-budget.interface";
+import { DbClientsOptions } from "./interface/database.interface";
 
-class ChildrenBudget {
-    
-}
-
-export { ChildrenBudget };
+export const ChildrenBudget = async ({ dbClientOption = DbClientsOptions.MY_SQL }: ChildrenBudgetArgs) => {
+    const dbClient = DbClientsMap[dbClientOption];
+    await dbClient.init({
+        username: '',
+        password: '',
+        host: '',
+        port: 1,
+    });
+    return dbClient;
+};
