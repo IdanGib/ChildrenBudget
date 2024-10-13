@@ -1,12 +1,12 @@
 {
-  "name": "@idangibly/childrenbudget",
-  "version": "1.0.1",
+  "name": "@idangib/childrenbudget",
+  "version": "1.0.2",
   "description": "children budget application",
   "repository": {
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
   "publishConfig": {
-    "@idangibly:registry": "https://npm.pkg.github.com"
+    "@idangib:registry": "https://npm.pkg.github.com"
   },
   "main": "dist/index.js",
   "scripts": {
