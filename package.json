@@ -13,10 +13,7 @@
   "main": "dist/index",
   "scripts": {
     "test": "exit 0",
-    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "release-patch": "./scripts/releases/patch.sh",
-    "release-minor": "scripts/releases/minor.sh",
-    "release-major": "scripts/releases/major.sh"
+    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "author": "idangibly",
   "license": "ISC",
