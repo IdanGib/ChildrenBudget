@@ -1,9 +1,10 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, InitDbClientArgs } from "@/interface/children-budget.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult } from "@/interface/database.interface";
 import { DatabaseClient } from "@/interface/database.interface";
+import { MySqlConfig } from "@/interface/mysql-client.interface";
 
-export class MySqlClient implements DatabaseClient {
+export class MySqlClient implements DatabaseClient<MySqlConfig> {
 
-    public async init(args: InitDbClientArgs) {
+    public async init(args: MySqlConfig) {
         
     }
 
