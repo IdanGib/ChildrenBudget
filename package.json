@@ -13,8 +13,7 @@
   "main": "dist/index",
   "scripts": {
     "test": "exit 0",
-    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "postinstall": "npm run build"
+    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "author": "idangibly",
   "license": "ISC",

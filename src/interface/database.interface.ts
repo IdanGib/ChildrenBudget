@@ -1,38 +1,33 @@
-export interface MySqlClientConfig {}
+import { Budget, Child, Parent, Transaction } from "./models.interface";
 
-export namespace DatabaseClientActions {
-    export interface Parents {
-        create: () => void;
-    }
+export interface MySqlConfig {
 
-    export interface Children {
-        create: () => void;   
-    }
-
-    export interface Transactions {
-        create: () => void;
-    }
-
-    export interface Budgets {
-        create: () => void;
-    }
 }
 
-export interface DatabaseClientInitConfig {
-    username: string;
-    password: string;
-    host: string;
-    port: number;
-}
+export type DatabaseClientInitConfig = Partial<{
+    mysql: MySqlConfig;
+}>;
+
+
+// database client interface
+type CommonOmited = 'id' | 'createdAt' | 'updatedAt';
+
+interface CommonResult<T> {
+    success: true; 
+    message: string;
+    result: T;
+};
+
+export type InitDbClient = (config: DatabaseClientInitConfig) => Promise<void>
+export type CreateParent<T = {}> = (args: Omit<Parent, CommonOmited>) => Promise<CommonResult<T>>;
+export type CreateChild<T = {}> = (args: Omit<Child, CommonOmited>) => Promise<CommonResult<T>>;
+export type CreateBudget<T = {}> = (args: Omit<Budget, CommonOmited>) => Promise<CommonResult<T>>;
+export type CreateTransaction<T = {}> = (args: Omit<Transaction, CommonOmited>) => Promise<CommonResult<T>>;
 
 export interface DatabaseClient {
-    init: (config: DatabaseClientInitConfig) => Promise<void>;
-    parents: DatabaseClientActions.Parents;
-    children: DatabaseClientActions.Children;
-    transactions: DatabaseClientActions.Transactions;
-    budgets: DatabaseClientActions.Budgets;
-}
-
-export enum DbClientsOptions {
-    MY_SQL
+    init: InitDbClient;
+    createParent: CreateParent;
+    createChild: CreateChild;
+    createBudget: CreateBudget;
+    createTransaction: CreateTransaction;
 }

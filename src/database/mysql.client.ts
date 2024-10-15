@@ -1,31 +1,41 @@
-import { DatabaseClient, DatabaseClientActions, MySqlClientConfig } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, InitDbClientArgs } from "@/interface/children-budget.interface";
+import { DatabaseClient } from "@/interface/database.interface";
 
 export class MySqlClient implements DatabaseClient {
-    constructor(private readonly config: MySqlClientConfig) {}
-    
-    public async init() {
+
+    public async init(args: InitDbClientArgs) {
         
     }
 
-    public readonly parents: DatabaseClientActions.Parents = {
-        create() {
-
-        },
-    };
-    
-    public readonly children: DatabaseClientActions.Children = {
-        create() {}
-    };
-
-    public readonly transactions: DatabaseClientActions.Transactions = {
-        create() {
-            
-        },
+    public async createParent(args: CreateParentArgs): Promise<CreateParentResult> {
+        return {
+            success: true,
+            message: '',
+            result: {},
+        };
     }
-    
-    public readonly budgets: DatabaseClientActions.Budgets = {
-        create() {
-            
-         },
+
+    public async createChild(args: CreateChildArgs): Promise<CreateChildResult> {
+        return {
+            success: true,
+            message: '',
+            result: {},
+        };
+    }
+
+    public async createBudget(args: CreateBudgetArgs): Promise<CreateBudgetResult> {
+        return {
+            success: true,
+            message: '',
+            result: {},
+        };
+    }
+
+    public async createTransaction(args: CreateTransactionArgs): Promise<CreateTransactionResult> {
+        return {
+            success: true,
+            message: '',
+            result: {},
+        };
     }
 }
