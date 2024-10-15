@@ -14,7 +14,9 @@
   "scripts": {
     "test": "exit 0",
     "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "release": "node release.js"
+    "release-patch": "./scripts/releases/patch.sh",
+    "release-minor": "./scripts/releases/minor.sh",
+    "release-major": "./scripts/releases/major.sh"
   },
   "author": "idangibly",
   "license": "ISC",
