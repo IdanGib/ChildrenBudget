@@ -1,7 +1,5 @@
 interface Common {
     id: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 export interface Budget extends Common {
@@ -30,6 +28,6 @@ export interface Transaction extends Common  {
     price: number;
     title: string;
     description: string;
-    date: Date;
+    timestamp: Date;
     budgetId: string;
 }
