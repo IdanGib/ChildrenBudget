@@ -13,7 +13,7 @@
   "main": "dist/index",
   "scripts": {
     "test": "jest",
-    "build": "npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
+    "build": "rm -rf dist && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
   },
   "author": "idangibly",
   "license": "ISC",

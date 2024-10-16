@@ -1,11 +1,24 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult } from "@/interface/database.interface";
 import { DatabaseClient } from "@/interface/database.interface";
 import { PostgreSqlConfig } from "@/interface/postgresql-client.interface";
+import { logger } from "@/lib/logger";
+import { Sequelize } from 'sequelize';
 
 export class PostgreSqlClient implements DatabaseClient<PostgreSqlConfig> {
-
-    public async init(args: PostgreSqlConfig) {
-        
+    private sequelize: Sequelize | undefined;
+    public async init({ username, password, host, database, port }: PostgreSqlConfig) {
+        const sequelize = new Sequelize(database, username, password, {
+            host,
+            dialect: 'postgres'
+        });
+        let connected = false;
+        try {
+            await sequelize.authenticate();
+            connected = true;
+        } catch (error) {} finally {
+            this.sequelize = sequelize;
+        }
+        return connected;
     }
 
     public async createParent(args: CreateParentArgs): Promise<CreateParentResult> {

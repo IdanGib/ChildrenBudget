@@ -8,7 +8,7 @@ interface CommonResult<T> {
     result: T;
 };
 
-export type InitDbClient<T> = (config: T) => Promise<void>
+export type InitDbClient<T> = (config: T) => Promise<boolean>
 export type CreateParent<T = {}> = (args: Omit<Parent, CommonOmited>) => Promise<CommonResult<T>>;
 export type CreateChild<T = {}> = (args: Omit<Child, CommonOmited>) => Promise<CommonResult<T>>;
 export type CreateBudget<T = {}> = (args: Omit<Budget, CommonOmited>) => Promise<CommonResult<T>>;
