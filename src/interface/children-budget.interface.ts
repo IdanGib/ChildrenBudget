@@ -1,12 +1,9 @@
-import { PostgreSqlConfig } from "./postgresql-client.interface";
-
-export type Login = (args: {}) => Promise<void>;
-export type Init = (args: {}) => Promise<void>;
+import { PostgreSqlConfig } from "./database.interface";
 
 export interface ChildrenBudget {
-    init: Init;
+ 
 }
 
 export interface ChildrenBudgetConfig {
-    postgreSql: PostgreSqlConfig;
+    postgresql: PostgreSqlConfig;
 }

@@ -1,14 +1,12 @@
-import { database } from "./database/database.index";
-import { ChildrenBudget, ChildrenBudgetConfig, Init, Login } from "./interface/children-budget.interface";
-import { DatabaseClient } from "./interface/database.interface";
-import { PostgreSqlConfig } from "./interface/postgresql-client.interface";
+import { database } from "./database/database";
+import { ChildrenBudget, ChildrenBudgetConfig } from "./interface/children-budget.interface";
 
-export class ChildrenBudgetImplementation implements ChildrenBudget {
-    private db: DatabaseClient<PostgreSqlConfig> | undefined;
-    
-    constructor(private config: ChildrenBudgetConfig) {}
-    
-    public async init() {
-        this.db = await database.initPostgresql({ postgresql: this.config.postgreSql });
+export const createChildrenBudgetApplication = async ({ postgresql }: ChildrenBudgetConfig): Promise<ChildrenBudget | null> => {
+    const actions = await database({ postgresql });
+    if (!actions) {
+        return null;
     }
+    return {
+
+    };
 }

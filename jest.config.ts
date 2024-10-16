@@ -194,6 +194,7 @@ const config: Config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+  detectOpenHandles: true,
 };
 
 export default config;
