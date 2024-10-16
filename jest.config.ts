@@ -2,9 +2,9 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
+import { compilerOptions } from './tsconfig.json';
 import { pathsToModuleNameMapper } from "ts-jest";
 import type {Config} from 'jest';
-
 const config: Config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -91,9 +91,7 @@ const config: Config = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper: pathsToModuleNameMapper({
-    "@/*": ["src/*"]
-  }),
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
 
