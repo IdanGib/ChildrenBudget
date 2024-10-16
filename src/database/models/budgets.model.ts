@@ -13,6 +13,7 @@ export const BudgetModel = (sequelize: Sequelize) =>
         },
         currency: {
             type: DataTypes.CHAR(36),
+            allowNull: false
         },
         value: {
             type: DataTypes.BIGINT,

@@ -5,6 +5,7 @@ import { ChildrenBudget } from '../src/interface/app.interface';
 import { childrenBudgetApplication } from '../src/app';
 
 config({ path: resolve(process.cwd(), '.env.test') });
+
 const postgresql = {
   host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
   password: process.env.TEST_DB_POSTGRESQL_PASSWORD ?? '',
@@ -12,6 +13,7 @@ const postgresql = {
   username: process.env.TEST_DB_POSTGRESQL_USERNAME ?? '',
   database: process.env.TEST_DB_POSTGRESQL_DATABASE ?? '',
 }
+
 describe('Main tests', () => {
     let app: ChildrenBudget | null = null;
     beforeAll(async () => {
@@ -24,6 +26,6 @@ describe('Main tests', () => {
       expect(app).not.toBeNull();
     });
     afterAll(async () => {
-      await app?.close();
+      await app?.shutdown();
     });
 });

@@ -36,12 +36,12 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         dialect: 'postgres',
         logging: false,
     });
-    const connected = await authenicate(sequelize);
         
     const close = async () => {
         await sequelize.close();
     }
 
+    const connected = await authenicate(sequelize);
     if (!connected) {
         await close();
         return null;
