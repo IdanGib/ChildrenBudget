@@ -7,10 +7,10 @@ interface CommonResult<T> {
 };
 
 export type InitDbClient<T, R> = (config: T) => Promise<R>
-export type CreateParent<T = {}> = (args: Omit<Parent, 'id'>) => Promise<CommonResult<T>>;
-export type CreateChild<T = {}> = (args: Omit<Child, 'id'>) => Promise<CommonResult<T>>;
-export type CreateBudget<T = {}> = (args: Omit<Budget, 'id'>) => Promise<CommonResult<T>>;
-export type CreateTransaction<T = {}> = (args: Omit<Transaction, 'id'>) => Promise<CommonResult<T>>;
+export type CreateParent = (args: Omit<Parent, 'id'>) => Promise<CommonResult<Parent>>;
+export type CreateChild = (args: Omit<Child, 'id'>) => Promise<CommonResult<Child>>;
+export type CreateBudget = (args: Omit<Budget, 'id'>) => Promise<CommonResult<Budget>>;
+export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<CommonResult<Transaction>>;
 
 export interface PostgreSqlConfig {
     port: number;
@@ -29,6 +29,7 @@ export interface DatabaseActions {
     createChild: CreateChild;
     createBudget: CreateBudget;
     createTransaction: CreateTransaction;
+    close: () => Promise<void>;
 }
 
 export type CreateParentArgs = Parameters<CreateParent>[0];

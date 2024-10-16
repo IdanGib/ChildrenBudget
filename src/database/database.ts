@@ -5,7 +5,7 @@ import { TransactionModel } from "./models/transactions.model";
 import { ParentModel } from "./models/parents.model";
 import { ChildModel } from "./models/children.model";
 import { logger } from "@/lib/logger";
-import { Budget, Child, Parent } from "@/interface/models.interface";
+import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -31,7 +31,7 @@ const createModels = async (sequelize: Sequelize) => {
     return { budget, parent, child, transaction };
 }
 
-export const database = async ({ postgresql }: DatabaseConfig): Promise<DatabaseActions & { close: () => Promise<void> } | null> => {
+export const database = async ({ postgresql }: DatabaseConfig): Promise<DatabaseActions | null> => {
     const sequelize = new Sequelize({
         ...postgresql,
         dialect: 'postgres',
@@ -46,38 +46,38 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     const { child, parent, transaction, budget } = await createModels(sequelize);
 
     const createBudget = async (args: CreateBudgetArgs): Promise<CreateBudgetResult> => {
-        const result = await budget.create<Model<CreateBudgetArgs>>({ ...args });
+        const result = await budget.create<Model<Budget, CreateBudgetArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result
+            result: result.get()
         };
     }
 
     const createChild = async (args: CreateChildArgs): Promise<CreateChildResult> => {
-        const result = await child.create<Model<CreateChildArgs>>({ ...args });
+        const result = await child.create<Model<Child, CreateChildArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result
+            result: result.get()
         };
     }
 
     const createParent = async (args: CreateParentArgs): Promise<CreateParentResult> => {
-        const result = await parent.create<Model<CreateParentArgs>>({ ...args });
+        const result = await parent.create<Model<Parent, CreateParentArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result
+            result: result.get({ plain: true })
         };
     }
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
-        const result = await transaction.create<Model<CreateTransactionArgs>>({ ...args });
+        const result = await transaction.create<Model<Transaction, CreateTransactionArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result
+            result: result.get()
         };
     }
     const close = async () => {
