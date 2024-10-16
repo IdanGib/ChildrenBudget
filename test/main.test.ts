@@ -2,6 +2,7 @@ import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { ChildrenBudget } from '../src/interface/app.interface';
+import { DatabaseActions } from '../src/interface/database.interface';
 import { childrenBudgetApplication } from '../src/app';
 
 config({ path: resolve(process.cwd(), '.env.test') });
@@ -15,7 +16,7 @@ const postgresql = {
 }
 
 describe('Main tests', () => {
-    let app: ChildrenBudget | null = null;
+    let app: (ChildrenBudget & Omit<DatabaseActions, 'close'>) | null = null;
     beforeAll(async () => {
       app = await childrenBudgetApplication({ postgresql });
     });
@@ -25,6 +26,22 @@ describe('Main tests', () => {
     test('App not null', () => {
       expect(app).not.toBeNull();
     });
+    // test('App creation methods', async () => {
+    //   const parent = await app?.createParent({});
+    //   const pid = parent?.id;
+    //   expect(pid).toBeDefined();
+    //   const child = await app?.createChild({ parentId: pid! });
+    //   const cid = child?.id;
+    //   expect(cid).toBeDefined();
+    //   expect(child?.parentId).toBe(pid);
+    //   const budget = await app?.createBudget({ value: 10, childId: cid!, currency: 'nis' });
+    //   const bid = budget?.id;
+    //   expect(bid).toBeDefined();
+    //   const transaction = await app?.createTransaction({ price: 22, budgetId: bid! });
+    //   const tid = transaction?.id;
+    //   expect(tid).toBeDefined();
+    //   expect(transaction?.budgetId).toBe(bid);
+    // });
     afterAll(async () => {
       await app?.shutdown();
     });
