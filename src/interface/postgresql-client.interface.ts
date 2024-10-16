@@ -6,3 +6,4 @@ export interface PostgreSqlConfig {
     password: string;
     port: number;
 }
+ 

@@ -1,4 +1,6 @@
+import { Sequelize } from "sequelize";
 import { Budget, Child, Parent, Transaction } from "./models.interface";
+import { PostgreSqlConfig } from "./postgresql-client.interface";
 
 type CommonOmited = 'id' | 'createdAt' | 'updatedAt';
 
@@ -8,14 +10,20 @@ interface CommonResult<T> {
     result: T;
 };
 
-export type InitDbClient<T> = (config: T) => Promise<boolean>
+export type InitDbClient<T, R> = (config: T) => Promise<R>
 export type CreateParent<T = {}> = (args: Omit<Parent, CommonOmited>) => Promise<CommonResult<T>>;
 export type CreateChild<T = {}> = (args: Omit<Child, CommonOmited>) => Promise<CommonResult<T>>;
 export type CreateBudget<T = {}> = (args: Omit<Budget, CommonOmited>) => Promise<CommonResult<T>>;
 export type CreateTransaction<T = {}> = (args: Omit<Transaction, CommonOmited>) => Promise<CommonResult<T>>;
 
-export interface DatabaseClient<T> {
-    init: InitDbClient<T>;
+export interface DatabaseConfig {
+    postgresql?: PostgreSqlConfig;
+}
+
+export type DatabaseClientInitResult =  Sequelize | undefined;
+
+export interface DatabaseClient<T, R = DatabaseClientInitResult> {
+    init: InitDbClient<T, R>;
     createParent: CreateParent;
     createChild: CreateChild;
     createBudget: CreateBudget;

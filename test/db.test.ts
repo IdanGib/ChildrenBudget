@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.test') });
 const INCLUDE_DB_CONNECTION_TESTS = '1';
+
 describe('Tests', () => {
     if (process.env.TEST_INCLUDE_DB_CONNECTION_TESTS === INCLUDE_DB_CONNECTION_TESTS) {
       describe('Test db', () => {
@@ -21,13 +22,15 @@ describe('Tests', () => {
     
         test('2. Test Postgresql client init: Success', async () => {
           const postgresql = new PostgreSqlClient();
-          const result = await postgresql.init({ 
+          const config = { 
             host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
             password: process.env.TEST_DB_POSTGRESQL_PASSWORD ?? '',
-            port: Number(process.env._TEST_DB_POSTGRESQL_PORT ?? 0), 
+            port: Number(process.env.TEST_DB_POSTGRESQL_PORT ?? 0), 
             username: process.env.TEST_DB_POSTGRESQL_USERNAME ?? '',
             database: process.env.TEST_DB_POSTGRESQL_DATABASE ?? '',
-          });
+          };
+          console.log(config);
+          const result = await postgresql.init(config);
           expect(result).toBe(true);
         });
       });
