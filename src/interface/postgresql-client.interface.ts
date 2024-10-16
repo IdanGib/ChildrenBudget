@@ -1,5 +1,5 @@
 
-export interface MySqlConfig {
+export interface PostgreSqlConfig {
     hostname: string;
     username: string;
     password: string;

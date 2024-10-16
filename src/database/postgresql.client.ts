@@ -1,10 +1,10 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult } from "@/interface/database.interface";
 import { DatabaseClient } from "@/interface/database.interface";
-import { MySqlConfig } from "@/interface/mysql-client.interface";
+import { PostgreSqlConfig } from "@/interface/postgresql-client.interface";
 
-export class MySqlClient implements DatabaseClient<MySqlConfig> {
+export class PostgreSqlClient implements DatabaseClient<PostgreSqlConfig> {
 
-    public async init(args: MySqlConfig) {
+    public async init(args: PostgreSqlConfig) {
         
     }
 
