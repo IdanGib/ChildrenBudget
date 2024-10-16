@@ -37,9 +37,13 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         logging: false,
     });
     const connected = await authenicate(sequelize);
-    
-    if (!connected) {
+        
+    const close = async () => {
         await sequelize.close();
+    }
+
+    if (!connected) {
+        await close();
         return null;
     }
     
@@ -64,9 +68,7 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         const result = await transaction.create<Model<Transaction, CreateTransactionArgs>>({ ...args });
         return  result.get();
     }
-    const close = async () => {
-        await sequelize.close();
-    }
+
     return {
         createBudget,
         createChild,
