@@ -40,6 +40,7 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     const connected = await authenicate(sequelize);
     
     if (!connected) {
+        await sequelize.close();
         return null;
     }
     

@@ -1,28 +1,29 @@
 import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import { config } from 'dotenv';
 import { resolve } from 'path';
-import { database } from '../src/database/database';
-import { DatabaseActions, DatabaseConfig } from '../src/interface/database.interface';
+import { ChildrenBudget } from '../src/interface/children-budget.interface';
+import { childrenBudget as App } from '../src/index';
+
 config({ path: resolve(process.cwd(), '.env.test') });
-const INCLUDE_DB_CONNECTION_TESTS = '1';
-const dbconfig: DatabaseConfig = { 
-  postgresql: {
-    host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
-    password: process.env.TEST_DB_POSTGRESQL_PASSWORD ?? '',
-    port: Number(process.env.TEST_DB_POSTGRESQL_PORT ?? 0), 
-    username: process.env.TEST_DB_POSTGRESQL_USERNAME ?? '',
-    database: process.env.TEST_DB_POSTGRESQL_DATABASE ?? '',
-  }
-};
+const postgresql = {
+  host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
+  password: process.env.TEST_DB_POSTGRESQL_PASSWORD ?? '',
+  port: Number(process.env.TEST_DB_POSTGRESQL_PORT ?? 0), 
+  username: process.env.TEST_DB_POSTGRESQL_USERNAME ?? '',
+  database: process.env.TEST_DB_POSTGRESQL_DATABASE ?? '',
+}
 describe('Main tests', () => {
-    let db: DatabaseActions | null = null;
+    let app: ChildrenBudget | null = null;
     beforeAll(async () => {
-      db = await database(dbconfig);
+      app = await App({ postgresql });
     });
-    test('1=1', () => {
-      expect(1).toBe(1);
+    test('App defined', () => {
+      expect(app).toBeDefined();
+    });
+    test('App not null', () => {
+      expect(app).not.toBeNull();
     });
     afterAll(async () => {
-      await db?.close();
+      await app?.close();
     });
 });

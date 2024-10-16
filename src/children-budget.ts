@@ -7,6 +7,8 @@ export const createChildrenBudgetApplication = async ({ postgresql }: ChildrenBu
         return null;
     }
     return {
-
+        async close() {
+            await actions.close();
+        }
     };
 }
