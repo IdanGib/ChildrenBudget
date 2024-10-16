@@ -1,4 +1,4 @@
-import { PostgreSqlClient } from '@/database/postgresql.client';
+import { PostgreSqlClient } from '../src/database/postgresql.client';
 import { describe, test, expect } from '@jest/globals';
 
 describe('Test db', () => {
