@@ -4,14 +4,20 @@ import { PostgreSqlConfig } from "@/interface/postgresql-client.interface";
 import { Sequelize } from "sequelize";
 
 export class PostgreSqlClient implements DatabaseClient<PostgreSqlConfig> {
+    private db: DatabaseClientInitResult;
     public async init({ username, password, host, database, port }: PostgreSqlConfig): Promise<DatabaseClientInitResult> {
-        const sequelize: Sequelize = new Sequelize(database, username, password, {
+        const sequelize: Sequelize = new Sequelize({
+            database, 
+            username, 
+            password, 
             host,
             port,
+            ssl: false,
             dialect: 'postgres',
         });
         try {
             await sequelize.authenticate();
+            this.db = sequelize;
             return sequelize;
         } catch (e) {
             return undefined;

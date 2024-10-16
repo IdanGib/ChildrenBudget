@@ -5,7 +5,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.test') });
 const INCLUDE_DB_CONNECTION_TESTS = '1';
 
-describe('Tests', () => {
+describe('Main tests', () => {
     if (process.env.TEST_INCLUDE_DB_CONNECTION_TESTS === INCLUDE_DB_CONNECTION_TESTS) {
       describe('Test db', () => {
         test('1. Test Postgresql client init: Fail', async () => {
@@ -17,7 +17,7 @@ describe('Tests', () => {
             username: '',
             database: '' 
           });
-          expect(result).toBe(false);
+          expect(result).toBe(undefined);
         });
     
         test('2. Test Postgresql client init: Success', async () => {
@@ -29,9 +29,8 @@ describe('Tests', () => {
             username: process.env.TEST_DB_POSTGRESQL_USERNAME ?? '',
             database: process.env.TEST_DB_POSTGRESQL_DATABASE ?? '',
           };
-          console.log(config);
           const result = await postgresql.init(config);
-          expect(result).toBe(true);
+          expect(result).not.toBeUndefined();
         });
       });
     }
