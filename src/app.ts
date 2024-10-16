@@ -1,5 +1,5 @@
 import { database } from "@/database/database";
-import { ChildrenBudget, ChildrenBudgetConfig } from "@/interface/children-budget.interface";
+import { ChildrenBudget, ChildrenBudgetConfig } from "@/interface/app.interface";
 
 export const childrenBudgetApplication = async ({ postgresql }: ChildrenBudgetConfig): Promise<ChildrenBudget | null> => {
     const actions = await database({ postgresql });

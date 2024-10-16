@@ -1,16 +1,9 @@
 import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 
-interface CommonResult<T> {
-    success: true; 
-    message: string;
-    result: T;
-};
-
-export type InitDbClient<T, R> = (config: T) => Promise<R>
-export type CreateParent = (args: Omit<Parent, 'id'>) => Promise<CommonResult<Parent>>;
-export type CreateChild = (args: Omit<Child, 'id'>) => Promise<CommonResult<Child>>;
-export type CreateBudget = (args: Omit<Budget, 'id'>) => Promise<CommonResult<Budget>>;
-export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<CommonResult<Transaction>>;
+export type CreateParent = (args: Omit<Parent, 'id'>) => Promise<Parent>;
+export type CreateChild = (args: Omit<Child, 'id'>) => Promise<Child>;
+export type CreateBudget = (args: Omit<Budget, 'id'>) => Promise<Budget>;
+export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<Transaction>;
 
 export interface PostgreSqlConfig {
     port: number;

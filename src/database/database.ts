@@ -1,4 +1,4 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChild, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig } from "@/interface/database.interface";
 import { Model, Sequelize } from "sequelize";
 import { BudgetModel } from "@/database/models/budgets.model";
 import { TransactionModel } from "@/database/models/transactions.model";
@@ -47,38 +47,22 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
 
     const createBudget = async (args: CreateBudgetArgs): Promise<CreateBudgetResult> => {
         const result = await budget.create<Model<Budget, CreateBudgetArgs>>({ ...args });
-        return {
-            success: true,
-            message: '',
-            result: result.get()
-        };
+        return result.get();
     }
 
     const createChild = async (args: CreateChildArgs): Promise<CreateChildResult> => {
         const result = await child.create<Model<Child, CreateChildArgs>>({ ...args });
-        return {
-            success: true,
-            message: '',
-            result: result.get()
-        };
+        return result.get();
     }
 
     const createParent = async (args: CreateParentArgs): Promise<CreateParentResult> => {
         const result = await parent.create<Model<Parent, CreateParentArgs>>({ ...args });
-        return {
-            success: true,
-            message: '',
-            result: result.get({ plain: true })
-        };
+        return result.get();
     }
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
         const result = await transaction.create<Model<Transaction, CreateTransactionArgs>>({ ...args });
-        return {
-            success: true,
-            message: '',
-            result: result.get()
-        };
+        return  result.get();
     }
     const close = async () => {
         await sequelize.close();

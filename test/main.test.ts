@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import { config } from 'dotenv';
 import { resolve } from 'path';
-import { ChildrenBudget } from '../src/interface/children-budget.interface';
+import { ChildrenBudget } from '../src/interface/app.interface';
 import { childrenBudgetApplication } from '../src/app';
 
 config({ path: resolve(process.cwd(), '.env.test') });
