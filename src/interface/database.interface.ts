@@ -1,7 +1,5 @@
 import { Budget, Child, Parent, Transaction } from "./models.interface";
 
-type CommonOmited = 'id' | 'createdAt' | 'updatedAt';
-
 interface CommonResult<T> {
     success: true; 
     message: string;
@@ -9,10 +7,10 @@ interface CommonResult<T> {
 };
 
 export type InitDbClient<T, R> = (config: T) => Promise<R>
-export type CreateParent<T = {}> = (args: Omit<Parent, CommonOmited>) => Promise<CommonResult<T>>;
-export type CreateChild<T = {}> = (args: Omit<Child, CommonOmited>) => Promise<CommonResult<T>>;
-export type CreateBudget<T = {}> = (args: Omit<Budget, CommonOmited>) => Promise<CommonResult<T>>;
-export type CreateTransaction<T = {}> = (args: Omit<Transaction, CommonOmited>) => Promise<CommonResult<T>>;
+export type CreateParent<T = {}> = (args: Omit<Parent, 'id'>) => Promise<CommonResult<T>>;
+export type CreateChild<T = {}> = (args: Omit<Child, 'id'>) => Promise<CommonResult<T>>;
+export type CreateBudget<T = {}> = (args: Omit<Budget, 'id'>) => Promise<CommonResult<T>>;
+export type CreateTransaction<T = {}> = (args: Omit<Transaction, 'id'>) => Promise<CommonResult<T>>;
 
 export interface PostgreSqlConfig {
     port: number;

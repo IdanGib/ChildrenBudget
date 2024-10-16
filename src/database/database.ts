@@ -1,10 +1,11 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChild, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig } from "@/interface/database.interface";
-import { Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 import { BudgetModel } from "./models/budgets.model";
 import { TransactionModel } from "./models/transactions.model";
 import { ParentModel } from "./models/parents.model";
 import { ChildModel } from "./models/children.model";
 import { logger } from "@/lib/logger";
+import { Budget, Child, Parent } from "@/interface/models.interface";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -27,6 +28,7 @@ const createModels = async (sequelize: Sequelize) => {
     budget.hasMany(transaction, { foreignKey: 'budgetId', onDelete: 'CASCADE'  });
     transaction.belongsTo(budget);
     await sequelize.sync();
+    return { budget, parent, child, transaction };
 }
 
 export const database = async ({ postgresql }: DatabaseConfig): Promise<DatabaseActions & { close: () => Promise<void> } | null> => {
@@ -41,38 +43,42 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return null;
     }
     
-    await createModels(sequelize);
+    const { child, parent, transaction, budget } = await createModels(sequelize);
 
     const createBudget = async (args: CreateBudgetArgs): Promise<CreateBudgetResult> => {
+        const result = await budget.create<Model<CreateBudgetArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result: {}
+            result
         };
     }
 
     const createChild = async (args: CreateChildArgs): Promise<CreateChildResult> => {
+        const result = await child.create<Model<CreateChildArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result: {}
+            result
         };
     }
 
     const createParent = async (args: CreateParentArgs): Promise<CreateParentResult> => {
+        const result = await parent.create<Model<CreateParentArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result: {}
+            result
         };
     }
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
+        const result = await transaction.create<Model<CreateTransactionArgs>>({ ...args });
         return {
             success: true,
             message: '',
-            result: {}
-        }; 
+            result
+        };
     }
     const close = async () => {
         await sequelize.close();
