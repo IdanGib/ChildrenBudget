@@ -1,10 +1,9 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChild, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig } from "@/interface/database.interface";
 import { Model, Sequelize } from "sequelize";
-import { BudgetModel } from "./models/budgets.model";
-import { TransactionModel } from "./models/transactions.model";
-import { ParentModel } from "./models/parents.model";
-import { ChildModel } from "./models/children.model";
-import { logger } from "@/lib/logger";
+import { BudgetModel } from "@/database/models/budgets.model";
+import { TransactionModel } from "@/database/models/transactions.model";
+import { ParentModel } from "@/database/models/parents.model";
+import { ChildModel } from "@/database/models/children.model";
 import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {

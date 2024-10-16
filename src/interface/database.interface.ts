@@ -1,4 +1,4 @@
-import { Budget, Child, Parent, Transaction } from "./models.interface";
+import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 
 interface CommonResult<T> {
     success: true; 

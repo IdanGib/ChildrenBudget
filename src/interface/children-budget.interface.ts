@@ -1,4 +1,4 @@
-import { PostgreSqlConfig } from "./database.interface";
+import { PostgreSqlConfig } from "@/interface/database.interface";
 
 export interface ChildrenBudget {
     close: () => Promise<void>;

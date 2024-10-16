@@ -2,7 +2,7 @@ import { describe, test, expect, beforeAll, afterAll } from '@jest/globals';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 import { ChildrenBudget } from '../src/interface/children-budget.interface';
-import { childrenBudget as App } from '../src/index';
+import { childrenBudgetApplication } from '../src/app';
 
 config({ path: resolve(process.cwd(), '.env.test') });
 const postgresql = {
@@ -15,7 +15,7 @@ const postgresql = {
 describe('Main tests', () => {
     let app: ChildrenBudget | null = null;
     beforeAll(async () => {
-      app = await App({ postgresql });
+      app = await childrenBudgetApplication({ postgresql });
     });
     test('App defined', () => {
       expect(app).toBeDefined();
