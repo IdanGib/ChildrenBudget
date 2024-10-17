@@ -4,8 +4,8 @@ import { resolve } from 'path';
 import { ChildrenBudget } from '../src/interface/app.interface';
 import { DatabaseActions } from '../src/interface/database.interface';
 import { childrenBudgetApplication } from '../src/app';
-
-config({ path: resolve(process.cwd(), '.env.test') });
+const envFile = '.env.test';
+config({ path: resolve(process.cwd(), envFile) });
 
 const postgresql = {
   host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
@@ -42,6 +42,14 @@ describe('Main tests', () => {
       //   const tid = transaction?.id;
       //   expect(tid).toBeDefined();
       //   expect(transaction?.budgetId).toBe(bid);
+      // });
+      // test('Test Update', async () => {
+      //   const oldName = 'idan';
+      //   const newName = 'idanGib';
+      //   const parent = await app?.createParent({ name: oldName });
+      //   expect(parent?.name).toBe(oldName);
+      //   const updated = await app?.updateParent({ where: { id: parent?.id! }, data: { name: newName } });
+      //   expect(updated?.name).toBe(newName);
       // });
       afterAll(async () => {
         await app?.shutdown();

@@ -5,10 +5,10 @@ export type CreateChild = (args: Omit<Child, 'id'>) => Promise<Child>;
 export type CreateBudget = (args: Omit<Budget, 'id'>) => Promise<Budget>;
 export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<Transaction>;
 
-export type UpdateParent = (args: { where: { parentId: string; }, data: Partial<Omit<Parent, 'id'>> }) => Promise<Parent>;
-export type UpdateChild = (args: { where: { parentId: string; }, data: Partial<Omit<Child, 'id'>> }) => Promise<Child>;
-export type UpdateBudget = (args: { where: { parentId: string; }, data: Partial<Omit<Budget, 'id'>> }) => Promise<Budget>;
-export type UpdateTransaction = (args: { where: { parentId: string; }, data: Partial<Omit<Transaction, 'id'>> }) => Promise<Transaction>;
+export type UpdateParent = (args: { where: { id: string; }, data: Partial<Omit<Parent, 'id'>> }) => Promise<Parent>;
+export type UpdateChild = (args: { where: { id: string;}, data: Partial<Omit<Child, 'id'>> }) => Promise<Child>;
+export type UpdateBudget = (args: { where: {id: string; }, data: Partial<Omit<Budget, 'id'>> }) => Promise<Budget>;
+export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<Omit<Transaction, 'id'>> }) => Promise<Transaction>;
 
 export interface PostgreSqlConfig {
     port: number;

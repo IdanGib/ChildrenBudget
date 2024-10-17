@@ -41,6 +41,7 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         await sequelize.close();
     }
 
+ 
     const connected = await authenicate(sequelize);
     if (!connected) {
         await close();
@@ -76,17 +77,22 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     }
 
     const updateChild = async ({ where, data }: UpdateChildArgs): Promise<UpdateChildResult> => {
-        const [, [result]] = await budget.update<Model<Child>>(data, { where, returning: true });
+        const [, [result]] = await child.update<Model<Child>>(data, { where, returning: true });
         return result.get();
     }
 
     const updateParent = async ({ where, data }: UpdateParentArgs): Promise<UpdateParentResult> => {
-        const [, [result]] = await budget.update<Model<Parent>>(data, { where, returning: true });
-        return result.get();
+        try {
+            const [, [result]] = await parent.update<Model<Parent>>(data, { where, returning: true });
+            return result.get();
+        } catch(e) {
+            console.log(e);
+            throw new Error('fail to update');
+        }
     }
 
     const updateTransaction = async ({ where, data }: UpdateTransactionArgs): Promise<UpdateTransactionResult> => {
-        const [, [result]] = await budget.update<Model<Transaction>>(data, { where, returning: true });
+        const [, [result]] = await transaction.update<Model<Transaction>>(data, { where, returning: true });
         return result.get();
     }
 
