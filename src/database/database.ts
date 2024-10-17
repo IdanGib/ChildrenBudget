@@ -1,4 +1,4 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Model, Sequelize } from "sequelize";
 import { BudgetModel } from "@/database/models/budgets.model";
 import { TransactionModel } from "@/database/models/transactions.model";
@@ -69,11 +69,36 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return  result.get();
     }
 
+
+    const updateBudget = async ({ where, data }: UpdateBudgetArgs): Promise<UpdateBudgetResult> => {
+        const [, [result]] = await budget.update<Model<Budget>>(data, { where, returning: true });
+        return result.get();
+    }
+
+    const updateChild = async ({ where, data }: UpdateChildArgs): Promise<UpdateChildResult> => {
+        const [, [result]] = await budget.update<Model<Child>>(data, { where, returning: true });
+        return result.get();
+    }
+
+    const updateParent = async ({ where, data }: UpdateParentArgs): Promise<UpdateParentResult> => {
+        const [, [result]] = await budget.update<Model<Parent>>(data, { where, returning: true });
+        return result.get();
+    }
+
+    const updateTransaction = async ({ where, data }: UpdateTransactionArgs): Promise<UpdateTransactionResult> => {
+        const [, [result]] = await budget.update<Model<Transaction>>(data, { where, returning: true });
+        return result.get();
+    }
+
     return {
         createBudget,
         createChild,
         createParent,
         createTransaction,
+        updateBudget,
+        updateChild,
+        updateParent,
+        updateTransaction,
         close,
     };
 }
