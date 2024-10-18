@@ -1,5 +1,6 @@
 import { Parent } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { PARANOID_TABLES } from "../database.constants";
 
 export const ParentModel = (sequelize: Sequelize) => 
     sequelize.define<Model, Parent>('parents', {
@@ -17,4 +18,4 @@ export const ParentModel = (sequelize: Sequelize) =>
         email: {
             type: DataTypes.STRING
         }
-    }, { paranoid: true });
+    }, { paranoid: PARANOID_TABLES });

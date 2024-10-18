@@ -1,5 +1,6 @@
 import { Child } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { PARANOID_TABLES } from "../database.constants";
 
 export const ChildModel = (sequelize: Sequelize) => 
     sequelize.define<Model, Omit<Child, 'parentId'>>('children', {
@@ -17,4 +18,4 @@ export const ChildModel = (sequelize: Sequelize) =>
         birthDate: {
             type: DataTypes.DATE
         }
-    }, { paranoid: true });
+    }, { paranoid: PARANOID_TABLES });

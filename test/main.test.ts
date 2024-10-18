@@ -27,7 +27,7 @@ describe('Main tests', () => {
       test('App not null', () => {
         expect(app).not.toBeNull();
       });
-      // test('App creation methods', async () => {
+      // test('Test create', async () => {
       //   const parent = await app?.createParent({});
       //   const pid = parent?.id;
       //   expect(pid).toBeDefined();
@@ -51,6 +51,21 @@ describe('Main tests', () => {
       //   const updated = await app?.updateParent({ where: { id: parent?.id! }, data: { name: newName } });
       //   expect(updated?.name).toBe(newName);
       // });
+      test('Test delete', async () => {
+        const commonName = 'test deletion 5';
+        const parent = await app?.createParent({ name: commonName });
+        const pid = parent?.id;
+        expect(pid).toBeDefined();
+        const child = await app?.createChild({ parentId: pid!, name: commonName });
+        const cid = child?.id;
+        expect(cid).toBeDefined();
+        expect(child?.parentId).toBe(pid);
+        const budget = await app?.createBudget({ title: commonName, value: 11, childId: cid!, currency: 'nis' });
+        const bid = budget?.id;
+        expect(bid).toBeDefined();
+        const count = await app?.deleteParent({ where: { id: pid! } });
+        expect(count).toBe(1);
+      });
       afterAll(async () => {
         await app?.shutdown();
       });

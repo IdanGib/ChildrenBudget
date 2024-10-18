@@ -96,17 +96,17 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     }
 
     const deleteBudget = async ({ where }: DeleteBudgetArgs): Promise<DeleteBudgetResult> => {
-        const result = await budget.destroy<Model<Budget>>({ where });
+        const result = await budget.destroy<Model<Budget>>({ where, cascade: true  });
         return result;
     }
 
     const deleteChild = async ({ where }: DeleteChildArgs): Promise<DeleteChildResult> => {
-        const result = await child.destroy<Model<Budget>>({ where });
+        const result = await child.destroy<Model<Budget>>({ where, cascade: true  });
         return result;
     }
 
     const deleteParent = async ({ where }: DeleteParentArgs): Promise<DeleteParentResult> => {
-        const result = await child.destroy<Model<Budget>>({ where });
+        const result = await parent.destroy<Model<Budget>>({ where, cascade: true });
         return result;
     }
 

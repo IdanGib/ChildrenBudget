@@ -1,0 +1,1 @@
+export const PARANOID_TABLES = false;

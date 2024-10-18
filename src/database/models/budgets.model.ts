@@ -1,5 +1,6 @@
 import { Budget } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { PARANOID_TABLES } from "../database.constants";
 
 export const BudgetModel = (sequelize: Sequelize) =>
     sequelize.define<Model, Omit<Budget, 'childId'>>('budgets', {
@@ -25,4 +26,4 @@ export const BudgetModel = (sequelize: Sequelize) =>
         description: {
             type: DataTypes.STRING
         }
-    }, { paranoid: true });
+    }, { paranoid: PARANOID_TABLES });

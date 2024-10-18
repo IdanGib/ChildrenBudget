@@ -1,5 +1,6 @@
 import { Transaction } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { PARANOID_TABLES } from "../database.constants";
 
 export const TransactionModel = (sequelize: Sequelize) => 
     sequelize.define<Model, Omit<Transaction, 'budgetId'>>('transactions', {
@@ -22,4 +23,6 @@ export const TransactionModel = (sequelize: Sequelize) =>
             type: DataTypes.BIGINT,
             allowNull: false
         }
+    }, {
+        paranoid: PARANOID_TABLES
     });
