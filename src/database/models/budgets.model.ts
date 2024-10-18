@@ -1,10 +1,10 @@
 import { Budget } from "@/interface/models.interface";
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Sequelize } from "sequelize";
 import { PARANOID_TABLES } from "../database.constants";
-import { CreateBudgetArgs } from "@/interface/database.interface";
+import { BudgetModel } from "@/interface/database.interface";
 
-export const BudgetModel = (sequelize: Sequelize) =>
-    sequelize.define<Model<Budget, CreateBudgetArgs>, Omit<Budget, 'childId'>>('budgets', {
+export const createBudgetModel = (sequelize: Sequelize) =>
+    sequelize.define<BudgetModel, Omit<Budget, 'childId'>>('budgets', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

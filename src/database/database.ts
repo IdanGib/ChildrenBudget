@@ -1,9 +1,9 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Sequelize } from "sequelize";
-import { BudgetModel } from "@/database/models/budgets.model";
-import { TransactionModel } from "@/database/models/transactions.model";
-import { ParentModel } from "@/database/models/parents.model";
-import { ChildModel } from "@/database/models/children.model";
+import { createBudgetModel } from "./models/budgets.model";
+import { createTransactionModel } from "./models/transactions.model";
+import { createParentModel } from "./models/parents.model";
+import { createChildModel } from "./models/children.model";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -15,10 +15,10 @@ const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
 }
 
 const createModels = async (sequelize: Sequelize) => {
-    const budget = BudgetModel(sequelize);
-    const transaction = TransactionModel(sequelize);
-    const parent = ParentModel(sequelize);
-    const child = ChildModel(sequelize);
+    const budget = createBudgetModel(sequelize);
+    const transaction = createTransactionModel(sequelize);
+    const parent = createParentModel(sequelize);
+    const child = createChildModel(sequelize);
 
     parent.hasMany(child, { foreignKey: 'parentId', onDelete: 'CASCADE' });
     child.belongsTo(parent);

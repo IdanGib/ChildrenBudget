@@ -1,4 +1,5 @@
 import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
+import { Model } from "sequelize";
 
 export type CreateParent = (args: Omit<Parent, 'id'>) => Promise<Parent>;
 export type CreateChild = (args: Omit<Child, 'id'>) => Promise<Child>;
@@ -83,3 +84,8 @@ export type DeleteBudgetResult = Awaited<ReturnType<DeleteBudget>>;
 
 export type DeleteTransactionArgs = Parameters<DeleteTransaction>[0];
 export type DeleteTransactionResult = Awaited<ReturnType<DeleteTransaction>>;
+
+export type BudgetModel = Model<Budget, CreateBudgetArgs>;
+export type ChildModel = Model<Child, CreateChildArgs>;
+export type ParentModel = Model<Parent, CreateParentArgs>;
+export type TransactionModel = Model<Transaction, CreateTransactionArgs>;
