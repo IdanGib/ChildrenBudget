@@ -1,4 +1,4 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Model, Sequelize } from "sequelize";
 import { BudgetModel } from "@/database/models/budgets.model";
 import { TransactionModel } from "@/database/models/transactions.model";
@@ -36,12 +36,11 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         dialect: 'postgres',
         logging: false,
     });
-        
+    
     const close = async () => {
         await sequelize.close();
     }
 
- 
     const connected = await authenicate(sequelize);
     if (!connected) {
         await close();
@@ -96,6 +95,26 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return result.get();
     }
 
+    const deleteBudget = async ({ where }: DeleteBudgetArgs): Promise<DeleteBudgetResult> => {
+        const result = await budget.destroy<Model<Budget>>({ where });
+        return result;
+    }
+
+    const deleteChild = async ({ where }: DeleteChildArgs): Promise<DeleteChildResult> => {
+        const result = await child.destroy<Model<Budget>>({ where });
+        return result;
+    }
+
+    const deleteParent = async ({ where }: DeleteParentArgs): Promise<DeleteParentResult> => {
+        const result = await child.destroy<Model<Budget>>({ where });
+        return result;
+    }
+
+    const deleteTransaction = async ({ where }: DeleteTransactionArgs): Promise<DeleteTransactionResult> => {
+        const result = await transaction.destroy<Model<Transaction>>({ where });
+        return result;
+    }
+
     return {
         createBudget,
         createChild,
@@ -105,6 +124,10 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         updateChild,
         updateParent,
         updateTransaction,
+        deleteBudget,
+        deleteChild,
+        deleteParent,
+        deleteTransaction,
         close,
     };
 }
