@@ -27,30 +27,31 @@ describe('Main tests', () => {
       test('App not null', () => {
         expect(app).not.toBeNull();
       });
-      // test('Test create', async () => {
-      //   const parent = await app?.createParent({});
-      //   const pid = parent?.id;
-      //   expect(pid).toBeDefined();
-      //   const child = await app?.createChild({ parentId: pid! });
-      //   const cid = child?.id;
-      //   expect(cid).toBeDefined();
-      //   expect(child?.parentId).toBe(pid);
-      //   const budget = await app?.createBudget({ value: 10, childId: cid!, currency: 'nis' });
-      //   const bid = budget?.id;
-      //   expect(bid).toBeDefined();
-      //   const transaction = await app?.createTransaction({ price: 22, budgetId: bid! });
-      //   const tid = transaction?.id;
-      //   expect(tid).toBeDefined();
-      //   expect(transaction?.budgetId).toBe(bid);
-      // });
-      // test('Test Update', async () => {
-      //   const oldName = 'idan';
-      //   const newName = 'idanGib';
-      //   const parent = await app?.createParent({ name: oldName });
-      //   expect(parent?.name).toBe(oldName);
-      //   const updated = await app?.updateParent({ where: { id: parent?.id! }, data: { name: newName } });
-      //   expect(updated?.name).toBe(newName);
-      // });
+
+      test('Test create', async () => {
+        const parent = await app?.createParent({});
+        const pid = parent?.id;
+        expect(pid).toBeDefined();
+        const child = await app?.createChild({ parentId: pid! });
+        const cid = child?.id;
+        expect(cid).toBeDefined();
+        expect(child?.parentId).toBe(pid);
+        const budget = await app?.createBudget({ value: 10, childId: cid!, currency: 'nis' });
+        const bid = budget?.id;
+        expect(bid).toBeDefined();
+        const transaction = await app?.createTransaction({ price: 22, budgetId: bid! });
+        const tid = transaction?.id;
+        expect(tid).toBeDefined();
+        expect(transaction?.budgetId).toBe(bid);
+      });
+      test('Test Update', async () => {
+        const oldName = 'idan';
+        const newName = 'idanGib';
+        const parent = await app?.createParent({ name: oldName });
+        expect(parent?.name).toBe(oldName);
+        const updated = await app?.updateParent({ where: { id: parent?.id! }, data: { name: newName } });
+        expect(updated?.name).toBe(newName);
+      });
       test('Test delete', async () => {
         const commonName = 'test deletion 5';
         const parent = await app?.createParent({ name: commonName });

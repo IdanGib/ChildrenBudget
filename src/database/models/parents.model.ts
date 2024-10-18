@@ -1,9 +1,10 @@
 import { Parent } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { PARANOID_TABLES } from "../database.constants";
+import { CreateParentArgs } from "@/interface/database.interface";
 
 export const ParentModel = (sequelize: Sequelize) => 
-    sequelize.define<Model, Parent>('parents', {
+    sequelize.define<Model<Parent, CreateParentArgs>, Parent>('parents', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

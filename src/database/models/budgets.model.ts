@@ -1,9 +1,10 @@
 import { Budget } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { PARANOID_TABLES } from "../database.constants";
+import { CreateBudgetArgs } from "@/interface/database.interface";
 
 export const BudgetModel = (sequelize: Sequelize) =>
-    sequelize.define<Model, Omit<Budget, 'childId'>>('budgets', {
+    sequelize.define<Model<Budget, CreateBudgetArgs>, Omit<Budget, 'childId'>>('budgets', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
@@ -25,5 +26,9 @@ export const BudgetModel = (sequelize: Sequelize) =>
         },
         description: {
             type: DataTypes.STRING
+        },
+        margin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     }, { paranoid: PARANOID_TABLES });

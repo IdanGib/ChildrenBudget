@@ -1,9 +1,10 @@
 import { Transaction } from "@/interface/models.interface";
 import { DataTypes, Model, Sequelize } from "sequelize";
 import { PARANOID_TABLES } from "../database.constants";
+import { CreateTransactionArgs } from "@/interface/database.interface";
 
 export const TransactionModel = (sequelize: Sequelize) => 
-    sequelize.define<Model, Omit<Transaction, 'budgetId'>>('transactions', {
+    sequelize.define<Model<Transaction, CreateTransactionArgs>, Omit<Transaction, 'budgetId'>>('transactions', {
         id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,

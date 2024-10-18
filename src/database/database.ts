@@ -1,10 +1,9 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
-import { Model, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
 import { BudgetModel } from "@/database/models/budgets.model";
 import { TransactionModel } from "@/database/models/transactions.model";
 import { ParentModel } from "@/database/models/parents.model";
 import { ChildModel } from "@/database/models/children.model";
-import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -20,13 +19,15 @@ const createModels = async (sequelize: Sequelize) => {
     const transaction = TransactionModel(sequelize);
     const parent = ParentModel(sequelize);
     const child = ChildModel(sequelize);
+
     parent.hasMany(child, { foreignKey: 'parentId', onDelete: 'CASCADE' });
     child.belongsTo(parent);
     child.hasMany(budget, { foreignKey: 'childId', onDelete: 'CASCADE'  });
     budget.belongsTo(child);
     budget.hasMany(transaction, { foreignKey: 'budgetId', onDelete: 'CASCADE'  });
     transaction.belongsTo(budget);
-    await sequelize.sync();
+
+    await sequelize.sync({ force: true });
     return { budget, parent, child, transaction };
 }
 
@@ -50,68 +51,63 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     const { child, parent, transaction, budget } = await createModels(sequelize);
 
     const createBudget = async (args: CreateBudgetArgs): Promise<CreateBudgetResult> => {
-        const result = await budget.create<Model<Budget, CreateBudgetArgs>>({ ...args });
+        const result = await budget.create({ ...args });
         return result.get();
     }
 
     const createChild = async (args: CreateChildArgs): Promise<CreateChildResult> => {
-        const result = await child.create<Model<Child, CreateChildArgs>>({ ...args });
+        const result = await child.create({ ...args });
         return result.get();
     }
 
     const createParent = async (args: CreateParentArgs): Promise<CreateParentResult> => {
-        const result = await parent.create<Model<Parent, CreateParentArgs>>({ ...args });
+        const result = await parent.create({ ...args });
         return result.get();
     }
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
-        const result = await transaction.create<Model<Transaction, CreateTransactionArgs>>({ ...args });
+        const result = await transaction.create({ ...args });
         return  result.get();
     }
 
 
     const updateBudget = async ({ where, data }: UpdateBudgetArgs): Promise<UpdateBudgetResult> => {
-        const [, [result]] = await budget.update<Model<Budget>>(data, { where, returning: true });
+        const [, [result]] = await budget.update(data, { where, returning: true });
         return result.get();
     }
 
     const updateChild = async ({ where, data }: UpdateChildArgs): Promise<UpdateChildResult> => {
-        const [, [result]] = await child.update<Model<Child>>(data, { where, returning: true });
+        const [, [result]] = await child.update(data, { where, returning: true });
         return result.get();
     }
 
     const updateParent = async ({ where, data }: UpdateParentArgs): Promise<UpdateParentResult> => {
-        try {
-            const [, [result]] = await parent.update<Model<Parent>>(data, { where, returning: true });
-            return result.get();
-        } catch(e) {
-            console.log(e);
-            throw new Error('fail to update');
-        }
+        const [, [result]] = await parent.update(data, { where, returning: true });
+        return result.get();
     }
 
     const updateTransaction = async ({ where, data }: UpdateTransactionArgs): Promise<UpdateTransactionResult> => {
-        const [, [result]] = await transaction.update<Model<Transaction>>(data, { where, returning: true });
+        const [, [result]] = await transaction.update(data, { where, returning: true });
         return result.get();
     }
 
     const deleteBudget = async ({ where }: DeleteBudgetArgs): Promise<DeleteBudgetResult> => {
-        const result = await budget.destroy<Model<Budget>>({ where, cascade: true  });
+        const result = await budget.destroy({ where, cascade: true  });
         return result;
     }
 
     const deleteChild = async ({ where }: DeleteChildArgs): Promise<DeleteChildResult> => {
-        const result = await child.destroy<Model<Budget>>({ where, cascade: true  });
+        const result = await child.destroy({ where, cascade: true  });
         return result;
     }
 
     const deleteParent = async ({ where }: DeleteParentArgs): Promise<DeleteParentResult> => {
-        const result = await parent.destroy<Model<Budget>>({ where, cascade: true });
+        const result = await parent.destroy({ where, cascade: true });
         return result;
     }
 
     const deleteTransaction = async ({ where }: DeleteTransactionArgs): Promise<DeleteTransactionResult> => {
-        const result = await transaction.destroy<Model<Transaction>>({ where });
+        const result = await transaction.destroy({ where });
         return result;
     }
 

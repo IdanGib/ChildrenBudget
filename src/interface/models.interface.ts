@@ -9,6 +9,7 @@ export interface Budget extends Common {
     currency: string;
     title?: string;
     description?: string;
+    margin?: boolean;
 }
 
 export interface Parent extends Common {
