@@ -92,10 +92,10 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     const updateTransaction = async ({ where, data }: UpdateTransactionArgs): Promise<UpdateTransactionResult> => {
         const { price } = data;
         if (price) {
-            const _budget = (await transaction.findOne({ where }))?.get();
+            const _ = (await transaction.findOne({ where }))?.get();
             await throwNoBudgetForTransactionError({ 
                 price, 
-                budgetId: _budget?.budgetId ?? '', 
+                budgetId: _?.budgetId ?? '', 
                 transactionModel: transaction, 
                 budgetModel: budget 
             });
