@@ -1,20 +1,30 @@
 import { Budget, Child, Parent, Transaction } from "@/interface/models.interface";
 import { Model } from "sequelize";
 
-export type CreateParent = (args: Omit<Parent, 'id'>) => Promise<Parent>;
-export type CreateChild = (args: Omit<Child, 'id'>) => Promise<Child>;
-export type CreateBudget = (args: Omit<Budget, 'id'>) => Promise<Budget>;
-export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<Transaction>;
+type ParentArg = Omit<Parent, 'id'>;
+type ChildArg = Omit<Child, 'id'>;
+type BudgetArg = Omit<Budget, 'id'>;
+type TransactionArg = Omit<Transaction, 'id'>;
 
-export type UpdateParent = (args: { where: { id: string; }, data: Partial<Omit<Parent, 'id'>> }) => Promise<Parent>;
-export type UpdateChild = (args: { where: { id: string;}, data: Partial<Omit<Child, 'id'>> }) => Promise<Child>;
-export type UpdateBudget = (args: { where: {id: string; }, data: Partial<Omit<Budget, 'id'>> }) => Promise<Budget>;
-export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<Omit<Transaction, 'id' | 'budgetId' | 'timestamp'>> }) => Promise<Transaction>;
+export type CreateParent = (args: ParentArg) => Promise<Parent>;
+export type CreateChild = (args: ChildArg) => Promise<Child>;
+export type CreateBudget = (args: BudgetArg) => Promise<Budget>;
+export type CreateTransaction = (args: TransactionArg) => Promise<Transaction>;
+
+export type UpdateParent = (args: { where: { id: string; }, data: Partial<ParentArg> }) => Promise<Parent>;
+export type UpdateChild = (args: { where: { id: string;}, data: Partial<ChildArg> }) => Promise<Child>;
+export type UpdateBudget = (args: { where: {id: string; }, data: Partial<BudgetArg> }) => Promise<Budget>;
+export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<TransactionArg> }) => Promise<Transaction>;
 
 export type DeleteParent = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteChild = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteBudget = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteTransaction = (args: { where: { id: string; } }) => Promise<number>;
+
+export type ReadParnets = () => Promise<void>;
+export type ReadChildren = () => Promise<void>;
+export type ReadBudgets = () => Promise<void>;
+export type ReadTransactions = () => Promise<void>;
 
 export interface PostgreSqlConfig {
     port: number;
