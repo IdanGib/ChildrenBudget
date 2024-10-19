@@ -9,7 +9,7 @@ export type CreateTransaction = (args: Omit<Transaction, 'id'>) => Promise<Trans
 export type UpdateParent = (args: { where: { id: string; }, data: Partial<Omit<Parent, 'id'>> }) => Promise<Parent>;
 export type UpdateChild = (args: { where: { id: string;}, data: Partial<Omit<Child, 'id'>> }) => Promise<Child>;
 export type UpdateBudget = (args: { where: {id: string; }, data: Partial<Omit<Budget, 'id'>> }) => Promise<Budget>;
-export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<Omit<Transaction, 'id'>> }) => Promise<Transaction>;
+export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<Omit<Transaction, 'id' | 'budgetId' | 'timestamp'>> }) => Promise<Transaction>;
 
 export type DeleteParent = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteChild = (args: { where: { id: string; } }) => Promise<number>;

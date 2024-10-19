@@ -36,7 +36,7 @@ describe('Main tests', () => {
         const cid = child?.id;
         expect(cid).toBeDefined();
         expect(child?.parentId).toBe(pid);
-        const budget = await app?.createBudget({ value: 10, childId: cid!, currency: 'nis' });
+        const budget = await app?.createBudget({ value: 100, childId: cid!, currency: 'nis' });
         const bid = budget?.id;
         expect(bid).toBeDefined();
         const transaction = await app?.createTransaction({ price: 22, budgetId: bid! });

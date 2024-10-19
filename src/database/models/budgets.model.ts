@@ -1,5 +1,5 @@
 import { Budget } from "@/interface/models.interface";
-import { DataTypes, Sequelize } from "sequelize";
+import { DataTypes, Model, Sequelize } from "sequelize";
 import { PARANOID_TABLES } from "../database.constants";
 import { BudgetModel } from "@/interface/database.interface";
 

@@ -1,9 +1,10 @@
 import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Sequelize } from "sequelize";
-import { createBudgetModel } from "./models/budgets.model";
-import { createTransactionModel } from "./models/transactions.model";
-import { createParentModel } from "./models/parents.model";
-import { createChildModel } from "./models/children.model";
+import { createBudgetModel } from "@/database/models/budgets.model";
+import { createTransactionModel } from "@/database/models/transactions.model";
+import { createParentModel } from "@/database/models/parents.model";
+import { createChildModel } from "@/database/models/children.model";
+import { throwNoBudgetForTransactionError } from "./database.validations";
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -27,7 +28,7 @@ const createModels = async (sequelize: Sequelize) => {
     budget.hasMany(transaction, { foreignKey: 'budgetId', onDelete: 'CASCADE'  });
     transaction.belongsTo(budget);
 
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     return { budget, parent, child, transaction };
 }
 
@@ -66,6 +67,8 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     }
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
+        const { price, budgetId } = args;
+        await throwNoBudgetForTransactionError({ price, budgetId , transactionModel: transaction, budgetModel: budget });
         const result = await transaction.create({ ...args });
         return  result.get();
     }
@@ -87,6 +90,16 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     }
 
     const updateTransaction = async ({ where, data }: UpdateTransactionArgs): Promise<UpdateTransactionResult> => {
+        const { price } = data;
+        if (price) {
+            const _budget = (await transaction.findOne({ where }))?.get();
+            await throwNoBudgetForTransactionError({ 
+                price, 
+                budgetId: _budget?.budgetId ?? '', 
+                transactionModel: transaction, 
+                budgetModel: budget 
+            });
+        }
         const [, [result]] = await transaction.update(data, { where, returning: true });
         return result.get();
     }
