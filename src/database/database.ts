@@ -1,10 +1,15 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, ReadBudgetsArgs, ReadBudgetsResult, ReadChildrenArgs, ReadChildrenResult, ReadOrder, ReadParentsArgs, ReadParentsResult, ReadTransactions, ReadTransactionsArgs, ReadTransactionsResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Sequelize } from "sequelize";
 import { createBudgetModel } from "@/database/models/budgets.model";
 import { createTransactionModel } from "@/database/models/transactions.model";
 import { createParentModel } from "@/database/models/parents.model";
 import { createChildModel } from "@/database/models/children.model";
 import { throwNoBudgetForTransactionError } from "./database.validations";
+import { DEFAULT_ORDER_DIRECTION } from "./database.constants";
+
+const getOrder = <T = unknown>({ order, direction }: Partial<ReadOrder<T>>) => {
+    return order ? [order, direction ?? DEFAULT_ORDER_DIRECTION] : undefined;
+}
 
 const authenicate = async (sequelize: Sequelize): Promise<boolean> => {
     try {
@@ -124,6 +129,26 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return result;
     }
 
+    const readParents = async ({ order, direction, ...args }: ReadParentsArgs): Promise<ReadParentsResult> => {
+        const result = await parent.findAll({ ...args, order: getOrder({ order, direction }) });
+        return result.map(r => r.get());
+    }
+    
+    const readChildren = async ({ order, direction, ...args }: ReadChildrenArgs): Promise<ReadChildrenResult> => {
+        const result = await child.findAll({ ...args, order: getOrder({ order, direction }) });
+        return result.map(r => r.get());
+    }
+    
+    const readBudgets = async ({ order, direction, ...args }: ReadBudgetsArgs): Promise<ReadBudgetsResult> => {
+        const result = await budget.findAll({ ...args, order: getOrder({ order, direction }) });
+        return result.map(r => r.get());
+    }
+    
+    const readTransactions = async ({ order, direction, ...args }: ReadTransactionsArgs): Promise<ReadTransactionsResult> => {
+        const result = await transaction.findAll({ ...args, order: getOrder({ order, direction }) });
+        return result.map(r => r.get());
+    }
+
     return {
         createBudget,
         createChild,
@@ -137,6 +162,10 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         deleteChild,
         deleteParent,
         deleteTransaction,
+        readBudgets,
+        readChildren,
+        readParents,
+        readTransactions,
         close,
     };
 }

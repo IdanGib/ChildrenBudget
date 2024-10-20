@@ -5,6 +5,9 @@ type ParentArg = Omit<Parent, 'id'>;
 type ChildArg = Omit<Child, 'id'>;
 type BudgetArg = Omit<Budget, 'id'>;
 type TransactionArg = Omit<Transaction, 'id'>;
+type OrderDirection = 'asc' | 'desc';
+export type ReadOrder<T> = { order: keyof T, direction: OrderDirection };
+type ReadOptions<T> = Partial<{ offset: number; limit: number; } & ReadOrder<T>>;
 
 export type CreateParent = (args: ParentArg) => Promise<Parent>;
 export type CreateChild = (args: ChildArg) => Promise<Child>;
@@ -21,10 +24,10 @@ export type DeleteChild = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteBudget = (args: { where: { id: string; } }) => Promise<number>;
 export type DeleteTransaction = (args: { where: { id: string; } }) => Promise<number>;
 
-export type ReadParnets = () => Promise<void>;
-export type ReadChildren = () => Promise<void>;
-export type ReadBudgets = () => Promise<void>;
-export type ReadTransactions = () => Promise<void>;
+export type ReadParents = (args: { where: Partial<{ id: string; }> } & ReadOptions<Parent>) => Promise<Array<Parent>>;
+export type ReadChildren = (args: { where: Partial<{ id: string; parnetId: string; }> } & ReadOptions<Child> ) => Promise<Array<Child>>;
+export type ReadBudgets = (args: { where: Partial<{ id: string; childId: string; }> } & ReadOptions<Budget>) => Promise<Array<Budget>>;
+export type ReadTransactions = (args: { where: Partial<{ id: string; budgetId: string; }> } & ReadOptions<Transaction>) => Promise<Array<Transaction>>;
 
 export interface PostgreSqlConfig {
     port: number;
@@ -53,6 +56,11 @@ export interface DatabaseActions {
     deleteBudget: DeleteBudget;
     deleteChild: DeleteChild;
     deleteTransaction: DeleteTransaction;
+
+    readParents: ReadParents;
+    readBudgets: ReadBudgets;
+    readChildren: ReadChildren;
+    readTransactions: ReadTransactions;
     
     close: () => Promise<void>;
 }
@@ -94,6 +102,23 @@ export type DeleteBudgetResult = Awaited<ReturnType<DeleteBudget>>;
 
 export type DeleteTransactionArgs = Parameters<DeleteTransaction>[0];
 export type DeleteTransactionResult = Awaited<ReturnType<DeleteTransaction>>;
+
+
+export type ReadParentsArgs = Parameters<ReadParents>[0];
+export type ReadParentsResult = Awaited<ReturnType<ReadParents>>;
+
+export type ReadChildrenArgs = Parameters<ReadChildren>[0];
+export type ReadChildrenResult = Awaited<ReturnType<ReadChildren>>;
+
+export type ReadBudgetsArgs = Parameters<ReadBudgets>[0];
+export type ReadBudgetsResult = Awaited<ReturnType<ReadBudgets>>;
+
+export type ReadTransactionsArgs = Parameters<ReadTransactions>[0];
+export type ReadTransactionsResult = Awaited<ReturnType<ReadTransactions>>;
+
+
+
+
 
 export type BudgetModel = Model<Budget, CreateBudgetArgs>;
 export type ChildModel = Model<Child, CreateChildArgs>;
