@@ -4,8 +4,10 @@ import { createBudgetModel } from "@/database/models/budgets.model";
 import { createTransactionModel } from "@/database/models/transactions.model";
 import { createParentModel } from "@/database/models/parents.model";
 import { createChildModel } from "@/database/models/children.model";
-import { throwNoBudgetForTransactionError } from "./database.validations";
+import { hasBudgetForTransaction } from "./database.validations";
 import { DEFAULT_ORDER_DIRECTION } from "./database.constants";
+import { CreateTransactionNoBudgetError, UpdateTransactionNoBudgetError, GetBudgetInfoBudgetNotFoundError, GetBudgetInfoChildNotFoundError } from "./database.errors";
+import { getAge } from "./database.utils";
 
 const getOrder = <T = unknown>({ order, direction }: Partial<ReadOrder<T>>) => {
     return order ? [order, direction ?? DEFAULT_ORDER_DIRECTION] : undefined;
@@ -73,7 +75,10 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
         const { price, budgetId } = args;
-        await throwNoBudgetForTransactionError({ price, budgetId , transactionModel: transaction, budgetModel: budget });
+        const hasBudget = await hasBudgetForTransaction({ price, budgetId , transactionModel: transaction, budgetModel: budget });
+        if (!hasBudget) {
+            throw new CreateTransactionNoBudgetError();
+        }
         const result = await transaction.create({ ...args });
         return  result.get();
     }
@@ -98,12 +103,15 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         const { price } = data;
         if (price) {
             const _ = (await transaction.findOne({ where }))?.get();
-            await throwNoBudgetForTransactionError({ 
+            const hasBudget = await hasBudgetForTransaction({ 
                 price, 
                 budgetId: _?.budgetId ?? '', 
                 transactionModel: transaction, 
                 budgetModel: budget 
             });
+            if (!hasBudget) {
+                throw new UpdateTransactionNoBudgetError();
+            }
         }
         const [, [result]] = await transaction.update(data, { where, returning: true });
         return result.get();
@@ -149,22 +157,37 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return result.map(r => r.get());
     }
 
-    const getBudgetInfo = async (args: GetBudgetInfoArgs): Promise<GetBudgetInfoResult> => {
-       const spent = 0;
-       const [b] = await readBudgets({ where: { id: args.id } });
-       const childId = b.childId;
-       const [c] = await readChildren({ where: {  id: childId } });
-       return { budget: b, child: c, spent };
+    const getBudgetInfo = async ({ id }: GetBudgetInfoArgs): Promise<GetBudgetInfoResult> => {
+       const _budget = (await budget.findOne({ where: { id } }))?.get();
+       if (!_budget) {
+            throw new GetBudgetInfoBudgetNotFoundError();
+       }
+       const childId = _budget.childId;
+       const _child = (await child.findOne({ where: { id: childId } }))?.get();
+       if (!_child) {
+            throw new GetBudgetInfoChildNotFoundError();
+       }    
+       const spent = await transaction.sum('price', { where: { budgetId: id } });
+       return { budget: _budget, child: _child, spent };
     }
 
-    const getChildInfo = async (args: GetChildInfoArgs): Promise<GetChildInfoResult> => {
-        const budgets = await readBudgets({ where: { childId: args.id } });
-        const v = budgets.map((b) => ({ spent: 0, value: b.value }));
-        const [c] = await readChildren({ where: { id: args.id } });
+    const getChildInfo = async ({ id }: GetChildInfoArgs): Promise<GetChildInfoResult> => {
+        const _child = (await child.findOne({ where: { id } }))?.get();
+        if (!_child) {
+            throw Error();
+        }
+        const _budgets = await budget.findAll({ where: { childId: _child?.id } }); 
+        const budgetsInfo = _budgets.map(({ get }) => {
+            const _budget = get();
+            return (async () => ({ 
+                spent: await transaction.sum('price', { where: { budgetId: _budget.id } }), 
+                budget: _budget, 
+            }))();
+        });
         return {
-            budgets: v,
-            child: c,
-            age: 0, // now - c.birthDate  
+            budgets: await Promise.all(budgetsInfo),
+            child: _child,
+            age: getAge(_child.birthDate),
         }
     }
 

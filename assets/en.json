@@ -1,6 +1,14 @@
 {
     "errors": {
-        "no_budget": "You don't have budget",
-        "update_price_without_budget_id": "Need to send budget id for update price"
+        "CreateTransaction": {
+            "NO_BUDGET": "no budget for transaciton"
+        },
+        "UpdateTransaction": {
+            "NO_BUDGET": "no budget for transaciton"
+        },
+        "GetBudgetInfo": {
+            "NO_CHILD": "no child id",
+            "NO_BUDGET": "no budget"
+        }
     }
 }

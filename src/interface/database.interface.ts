@@ -37,8 +37,8 @@ type GetBudgetInfo = (args: { id: string; }) => Promise<{
 
 type GetChildInfo = (args: { id: string; }) => Promise<{
     child: Child;
-    age: number;
-    budgets: Array<{ value: number; spent: number }>;
+    age?: number;
+    budgets: Array<{ budget: Budget; spent: number }>;
 }>;
 
 export interface PostgreSqlConfig {

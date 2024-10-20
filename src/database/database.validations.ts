@@ -1,6 +1,5 @@
 import { BudgetModel, CreateTransactionArgs, TransactionModel } from "@/interface/database.interface";
 import { ModelStatic } from "sequelize";
-import { NoBudgetForTransactionError } from "@/database/database.errors";
 
 interface HasBudgetForTransactionArgs {
     price: number;
@@ -9,7 +8,7 @@ interface HasBudgetForTransactionArgs {
     transactionModel: ModelStatic<TransactionModel>;
 }
 
-const hasBudgetForTransaction = async ({ 
+export const hasBudgetForTransaction = async ({ 
     price, 
     budgetId,
     budgetModel, 
@@ -23,14 +22,7 @@ const hasBudgetForTransaction = async ({
     if (margin) {
         return true;
     }
-    const transactions = await transactionModel.findAll({ where: { budgetId } });
-    const sum = transactions.reduce((acc, v) => acc + v.get().price, 0) + price;
-    return sum <= value;
+    const sum = await transactionModel.sum('price', { where: { budgetId } });
+    return (sum + price) <= value;
 }
 
-export const  throwNoBudgetForTransactionError = async (args: HasBudgetForTransactionArgs) => {
-    const hasBudget = await hasBudgetForTransaction(args);
-    if (!hasBudget) {
-        throw new NoBudgetForTransactionError()
-    }
-};
