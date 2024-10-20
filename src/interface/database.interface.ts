@@ -14,20 +14,23 @@ export type CreateChild = (args: ChildArg) => Promise<Child>;
 export type CreateBudget = (args: BudgetArg) => Promise<Budget>;
 export type CreateTransaction = (args: TransactionArg) => Promise<Transaction>;
 
-export type UpdateParent = (args: { where: { id: string; }, data: Partial<ParentArg> }) => Promise<Parent>;
-export type UpdateChild = (args: { where: { id: string;}, data: Partial<ChildArg> }) => Promise<Child>;
-export type UpdateBudget = (args: { where: {id: string; }, data: Partial<BudgetArg> }) => Promise<Budget>;
-export type UpdateTransaction = (args: { where: { id: string; }, data: Partial<TransactionArg> }) => Promise<Transaction>;
+type UpdateParent = (args: { where: { id: string; }, data: Partial<ParentArg> }) => Promise<Parent>;
+type UpdateChild = (args: { where: { id: string;}, data: Partial<ChildArg> }) => Promise<Child>;
+type UpdateBudget = (args: { where: {id: string; }, data: Partial<BudgetArg> }) => Promise<Budget>;
+type UpdateTransaction = (args: { where: { id: string; }, data: Partial<TransactionArg> }) => Promise<Transaction>;
 
-export type DeleteParent = (args: { where: { id: string; } }) => Promise<number>;
-export type DeleteChild = (args: { where: { id: string; } }) => Promise<number>;
-export type DeleteBudget = (args: { where: { id: string; } }) => Promise<number>;
-export type DeleteTransaction = (args: { where: { id: string; } }) => Promise<number>;
+type DeleteParent = (args: { where: { id: string; } }) => Promise<number>;
+type DeleteChild = (args: { where: { id: string; } }) => Promise<number>;
+type DeleteBudget = (args: { where: { id: string; } }) => Promise<number>;
+type DeleteTransaction = (args: { where: { id: string; } }) => Promise<number>;
 
-export type ReadParents = (args: { where: Partial<{ id: string; }> } & ReadOptions<Parent>) => Promise<Array<Parent>>;
-export type ReadChildren = (args: { where: Partial<{ id: string; parnetId: string; }> } & ReadOptions<Child> ) => Promise<Array<Child>>;
-export type ReadBudgets = (args: { where: Partial<{ id: string; childId: string; }> } & ReadOptions<Budget>) => Promise<Array<Budget>>;
-export type ReadTransactions = (args: { where: Partial<{ id: string; budgetId: string; }> } & ReadOptions<Transaction>) => Promise<Array<Transaction>>;
+type ReadParents = (args: { where: Partial<{ id: string; }> } & ReadOptions<Parent>) => Promise<Array<Parent>>;
+type ReadChildren = (args: { where: Partial<{ id: string; parnetId: string; }> } & ReadOptions<Child> ) => Promise<Array<Child>>;
+type ReadBudgets = (args: { where: Partial<{ id: string; childId: string; }> } & ReadOptions<Budget>) => Promise<Array<Budget>>;
+type ReadTransactions = (args: { where: Partial<{ id: string; budgetId: string; }> } & ReadOptions<Transaction>) => Promise<Array<Transaction>>;
+
+type GetBudgetInfo = (args: { id: string; }) => Promise<void>;
+type GetChildInfo = (args: { id: string; }) => Promise<void>;
 
 export interface PostgreSqlConfig {
     port: number;
@@ -62,6 +65,9 @@ export interface DatabaseActions {
     readChildren: ReadChildren;
     readTransactions: ReadTransactions;
     
+    getBudgetInfo: GetBudgetInfo;
+    getChildInfo: GetChildInfo;
+
     close: () => Promise<void>;
 }
 
@@ -116,9 +122,11 @@ export type ReadBudgetsResult = Awaited<ReturnType<ReadBudgets>>;
 export type ReadTransactionsArgs = Parameters<ReadTransactions>[0];
 export type ReadTransactionsResult = Awaited<ReturnType<ReadTransactions>>;
 
+export type GetBudgetInfoArgs = Parameters<GetBudgetInfo>[0];
+export type GetBudgetInfoResult = Awaited<ReturnType<GetBudgetInfo>>;
 
-
-
+export type GetChildInfoArgs = Parameters<GetChildInfo>[0];
+export type GetChildInfoResult = Awaited<ReturnType<GetChildInfo>>;
 
 export type BudgetModel = Model<Budget, CreateBudgetArgs>;
 export type ChildModel = Model<Child, CreateChildArgs>;

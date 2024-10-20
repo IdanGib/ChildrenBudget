@@ -1,4 +1,4 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, ReadBudgetsArgs, ReadBudgetsResult, ReadChildrenArgs, ReadChildrenResult, ReadOrder, ReadParentsArgs, ReadParentsResult, ReadTransactions, ReadTransactionsArgs, ReadTransactionsResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, GetBudgetInfoArgs, GetBudgetInfoResult, GetChildInfoArgs, GetChildInfoResult, ReadBudgetsArgs, ReadBudgetsResult, ReadChildrenArgs, ReadChildrenResult, ReadOrder, ReadParentsArgs, ReadParentsResult, ReadTransactionsArgs, ReadTransactionsResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Sequelize } from "sequelize";
 import { createBudgetModel } from "@/database/models/budgets.model";
 import { createTransactionModel } from "@/database/models/transactions.model";
@@ -149,6 +149,14 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         return result.map(r => r.get());
     }
 
+    const getBudgetInfo = async (args: GetBudgetInfoArgs): Promise<GetBudgetInfoResult> => {
+       
+    }
+
+    const getChildInfo = async (args: GetChildInfoArgs): Promise<GetChildInfoResult> => {
+
+    }
+
     return {
         createBudget,
         createChild,
@@ -166,6 +174,8 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         readChildren,
         readParents,
         readTransactions,
+        getBudgetInfo,
+        getChildInfo,
         close,
     };
 }
