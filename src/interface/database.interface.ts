@@ -29,8 +29,17 @@ type ReadChildren = (args: { where: Partial<{ id: string; parnetId: string; }> }
 type ReadBudgets = (args: { where: Partial<{ id: string; childId: string; }> } & ReadOptions<Budget>) => Promise<Array<Budget>>;
 type ReadTransactions = (args: { where: Partial<{ id: string; budgetId: string; }> } & ReadOptions<Transaction>) => Promise<Array<Transaction>>;
 
-type GetBudgetInfo = (args: { id: string; }) => Promise<void>;
-type GetChildInfo = (args: { id: string; }) => Promise<void>;
+type GetBudgetInfo = (args: { id: string; }) => Promise<{ 
+    spent: number; 
+    child: Child, 
+    budget: Budget,
+}>;
+
+type GetChildInfo = (args: { id: string; }) => Promise<{
+    child: Child;
+    age: number;
+    budgets: Array<{ value: number; spent: number }>;
+}>;
 
 export interface PostgreSqlConfig {
     port: number;

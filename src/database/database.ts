@@ -150,11 +150,22 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     }
 
     const getBudgetInfo = async (args: GetBudgetInfoArgs): Promise<GetBudgetInfoResult> => {
-       
+       const spent = 0;
+       const [b] = await readBudgets({ where: { id: args.id } });
+       const childId = b.childId;
+       const [c] = await readChildren({ where: {  id: childId } });
+       return { budget: b, child: c, spent };
     }
 
     const getChildInfo = async (args: GetChildInfoArgs): Promise<GetChildInfoResult> => {
-
+        const budgets = await readBudgets({ where: { childId: args.id } });
+        const v = budgets.map((b) => ({ spent: 0, value: b.value }));
+        const [c] = await readChildren({ where: { id: args.id } });
+        return {
+            budgets: v,
+            child: c,
+            age: 0, // now - c.birthDate  
+        }
     }
 
     return {
