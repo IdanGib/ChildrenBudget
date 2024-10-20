@@ -6,11 +6,11 @@
     "type": "github",
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
-  "types": "./dist/index",
+  "types": "dist/src",
   "publishConfig": {
     "@idangib:registry": "https://npm.pkg.github.com"
   },
-  "main": "dist/index",
+  "main": "dist/src/app",
   "scripts": {
     "test": "jest",
     "build": "rm -rf dist && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
