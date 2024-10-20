@@ -6,7 +6,7 @@
     "type": "github",
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
-  "types": "dist/src",
+  "types": "dist/src/app",
   "publishConfig": {
     "@idangib:registry": "https://npm.pkg.github.com"
   },
