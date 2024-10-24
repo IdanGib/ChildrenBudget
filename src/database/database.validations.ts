@@ -1,5 +1,9 @@
-import { BudgetModel, CreateTransactionArgs, TransactionModel } from "@/interface/database.interface";
+import { BudgetModel, TransactionModel } from "@/interface/database.interface";
 import { ModelStatic } from "sequelize";
+import { isBefore } from 'date-fns';
+import en from '~/assets/en.json';
+
+const { TransactionValidationErrors } = en.errors;
 
 interface HasBudgetForTransactionArgs {
     price: number;
@@ -13,16 +17,22 @@ export const hasBudgetForTransaction = async ({
     budgetId,
     budgetModel, 
     transactionModel 
-}: HasBudgetForTransactionArgs): Promise<boolean> => {
+}: HasBudgetForTransactionArgs): Promise<{ err: string | null }> => {
     const _budget = await budgetModel.findOne({ where: { id: budgetId } });
     if (!_budget) {
-        return false;
+        return { err: TransactionValidationErrors.BUDGET_NOT_FOUND };
     }
-    const { value, margin } = _budget.get();
-    if (margin) {
-        return true;
+    const { value, margin, expirationDate } = _budget.get();
+    if (expirationDate && isBefore(expirationDate, new Date())) {
+        return { err: TransactionValidationErrors.BUDGET_EXPIRED };
     }
-    const sum = await transactionModel.sum('price', { where: { budgetId } });
-    return (sum + price) <= value;
+    if (!margin) {
+        const sum = await transactionModel.sum('price', { where: { budgetId } });
+        if ((sum + price) > value) {
+            return { err: TransactionValidationErrors.NO_BUDGET_VALUE };
+        }
+    }
+
+    return { err: null };
 }
 

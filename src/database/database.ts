@@ -1,4 +1,4 @@
-import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, GetBudgetInfoArgs, GetBudgetInfoResult, GetChildInfoArgs, GetChildInfoResult, ReadBudgetsArgs, ReadBudgetsResult, ReadChildrenArgs, ReadChildrenResult, ReadOrder, ReadParentsArgs, ReadParentsResult, ReadTransactionsArgs, ReadTransactionsResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
+import { CreateBudgetArgs, CreateBudgetResult, CreateChildArgs, CreateChildResult, CreateParentArgs, CreateParentResult, CreateTransactionArgs, CreateTransactionResult, DatabaseActions, DatabaseConfig, DeleteBudgetArgs, DeleteBudgetResult, DeleteChildArgs, DeleteChildResult, DeleteParentArgs, DeleteParentResult, DeleteTransactionArgs, DeleteTransactionResult, GetBudgetInfoArgs, GetBudgetInfoResult, GetChildInfoArgs, GetChildInfoResult, GetParentInfoArgs, GetParentInfoResult, GetTransactionsPriceSumArgs, GetTransactionsPriceSumResult, ReadBudgetsArgs, ReadBudgetsResult, ReadChildrenArgs, ReadChildrenResult, ReadOrder, ReadParentsArgs, ReadParentsResult, ReadTransactionsArgs, ReadTransactionsResult, UpdateBudgetArgs, UpdateBudgetResult, UpdateChildArgs, UpdateChildResult, UpdateParentArgs, UpdateParentResult, UpdateTransactionArgs, UpdateTransactionResult } from "@/interface/database.interface";
 import { Sequelize } from "sequelize";
 import { createBudgetModel } from "@/database/models/budgets.model";
 import { createTransactionModel } from "@/database/models/transactions.model";
@@ -6,7 +6,7 @@ import { createParentModel } from "@/database/models/parents.model";
 import { createChildModel } from "@/database/models/children.model";
 import { hasBudgetForTransaction } from "./database.validations";
 import { DEFAULT_ORDER_DIRECTION } from "./database.constants";
-import { CreateTransactionNoBudgetError, UpdateTransactionNoBudgetError, GetBudgetInfoBudgetNotFoundError, GetBudgetInfoChildNotFoundError } from "./database.errors";
+import { CreateTransactionNoBudgetError, UpdateTransactionNoBudgetError, GetBudgetInfoBudgetNotFoundError, GetBudgetInfoChildNotFoundError, GetChildInfoChildNotFound, GetParentInfoParentNotFound } from "./database.errors";
 import { getAge } from "./database.utils";
 
 const getOrder = <T = unknown>({ order, direction }: Partial<ReadOrder<T>>) => {
@@ -75,9 +75,9 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
 
     const createTransaction = async (args: CreateTransactionArgs): Promise<CreateTransactionResult> => {
         const { price, budgetId } = args;
-        const hasBudget = await hasBudgetForTransaction({ price, budgetId , transactionModel: transaction, budgetModel: budget });
-        if (!hasBudget) {
-            throw new CreateTransactionNoBudgetError();
+        const { err } = await hasBudgetForTransaction({ price, budgetId , transactionModel: transaction, budgetModel: budget });
+        if (err) {
+            throw new CreateTransactionNoBudgetError(err);
         }
         const result = await transaction.create({ ...args });
         return  result.get();
@@ -103,14 +103,14 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         const { price } = data;
         if (price) {
             const _ = (await transaction.findOne({ where }))?.get();
-            const hasBudget = await hasBudgetForTransaction({ 
+            const { err } = await hasBudgetForTransaction({ 
                 price, 
                 budgetId: _?.budgetId ?? '', 
                 transactionModel: transaction, 
                 budgetModel: budget 
             });
-            if (!hasBudget) {
-                throw new UpdateTransactionNoBudgetError();
+            if (err) {
+                throw new UpdateTransactionNoBudgetError(err);
             }
         }
         const [, [result]] = await transaction.update(data, { where, returning: true });
@@ -174,7 +174,7 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
     const getChildInfo = async ({ id }: GetChildInfoArgs): Promise<GetChildInfoResult> => {
         const _child = (await child.findOne({ where: { id } }))?.get();
         if (!_child) {
-            throw Error();
+            throw new GetChildInfoChildNotFound();
         }
         const _budgets = await budget.findAll({ where: { childId: _child?.id } }); 
         const budgetsInfo = _budgets.map(({ get }) => {
@@ -189,6 +189,23 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
             child: _child,
             age: getAge(_child.birthDate),
         }
+    }
+
+    const getParentInfo = async ({ id }: GetParentInfoArgs): Promise<GetParentInfoResult> => {
+        const _parent = (await parent.findOne({ where: { id } }))?.get();
+        if (!_parent) {
+            throw new GetParentInfoParentNotFound();
+        }
+        const _children = (await child.findAll({ where: { parentId: _parent?.id } })).map(c => c?.get()); 
+        return {
+            parent: _parent,
+            children: _children,
+        }
+    }
+
+    const getTransactionsPriceSum = async ({ budgetId }: GetTransactionsPriceSumArgs): Promise<GetTransactionsPriceSumResult> => {
+        const sum = await transaction.sum('price', { where: { budgetId } });
+        return sum;
     }
 
     return {
@@ -210,6 +227,8 @@ export const database = async ({ postgresql }: DatabaseConfig): Promise<Database
         readTransactions,
         getBudgetInfo,
         getChildInfo,
+        getParentInfo,
+        getTransactionsPriceSum,
         close,
     };
 }

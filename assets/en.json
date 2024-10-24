@@ -1,5 +1,10 @@
 {
     "errors": {
+        "TransactionValidationErrors": {
+            "BUDGET_NOT_FOUND": "budget not found",
+            "BUDGET_EXPIRED": "transaction expired",
+            "NO_BUDGET_VALUE": "no budget for this transaction"
+        },
         "CreateTransaction": {
             "NO_BUDGET": "no budget for transaciton"
         },
@@ -9,6 +14,12 @@
         "GetBudgetInfo": {
             "NO_CHILD": "no child id",
             "NO_BUDGET": "no budget"
+        },
+        "GetChildInfo": {
+            "NO_CHILD": "child not found"
+        },
+        "GetParentInfo": {
+            "NO_PARENT": "parent not found"
         }
     }
 }

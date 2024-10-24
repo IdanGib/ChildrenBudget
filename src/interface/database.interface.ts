@@ -41,6 +41,13 @@ type GetChildInfo = (args: { id: string; }) => Promise<{
     budgets: Array<{ budget: Budget; spent: number }>;
 }>;
 
+type GetParentInfo = (args: { id: string; }) => Promise<{
+    parent: Parent;
+    children: Child[];
+}>;
+
+type GetTransactionsPriceSum = (args: { budgetId: string; }) => Promise<number>;
+
 export interface PostgreSqlConfig {
     port: number;
     host: string;
@@ -76,7 +83,8 @@ export interface DatabaseActions {
     
     getBudgetInfo: GetBudgetInfo;
     getChildInfo: GetChildInfo;
-
+    getParentInfo: GetParentInfo;
+    getTransactionsPriceSum: GetTransactionsPriceSum;
     close: () => Promise<void>;
 }
 
@@ -136,6 +144,12 @@ export type GetBudgetInfoResult = Awaited<ReturnType<GetBudgetInfo>>;
 
 export type GetChildInfoArgs = Parameters<GetChildInfo>[0];
 export type GetChildInfoResult = Awaited<ReturnType<GetChildInfo>>;
+
+export type GetParentInfoArgs = Parameters<GetParentInfo>[0];
+export type GetParentInfoResult = Awaited<ReturnType<GetParentInfo>>;
+
+export type GetTransactionsPriceSumArgs = Parameters<GetTransactionsPriceSum>[0];
+export type GetTransactionsPriceSumResult = Awaited<ReturnType<GetTransactionsPriceSum>>;
 
 export type BudgetModel = Model<Budget, CreateBudgetArgs>;
 export type ChildModel = Model<Child, CreateChildArgs>;
