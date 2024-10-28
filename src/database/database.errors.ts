@@ -1,6 +1,6 @@
 import en from '~/assets/en.json';
 
-const { CreateTransaction, UpdateTransaction, GetBudgetInfo, GetChildInfo, GetParentInfo } = en.errors;
+const { CreateTransaction, UpdateTransaction, GetBudgetInfo, GetChildInfo, GetParentInfo, CreateBudget } = en.errors;
 
 export class CreateTransactionNoBudgetError extends Error {
     constructor(public message: string = CreateTransaction.NO_BUDGET) {
@@ -33,6 +33,12 @@ export class GetChildInfoChildNotFound  extends Error {
 }
 export class GetParentInfoParentNotFound extends Error {
     constructor(public message: string = GetParentInfo.NO_PARENT) {
+        super();
+    }
+}
+
+export class InvalidCurrency  extends Error {
+    constructor(public message: string = CreateBudget.INVALID_CURRENCY) {
         super();
     }
 }

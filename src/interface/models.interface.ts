@@ -15,7 +15,6 @@ export interface Budget extends Common {
 export interface Parent extends Common {
     name?: string;
     imageUrl?: string;
-    email?: string;
 }
 
 export interface Child extends Common {

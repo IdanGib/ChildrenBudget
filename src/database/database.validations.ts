@@ -35,4 +35,3 @@ export const hasBudgetForTransaction = async ({
 
     return { err: null };
 }
-

@@ -4,8 +4,10 @@ import { resolve } from 'path';
 import { ChildrenBudget } from '../src/interface/app.interface';
 import { DatabaseActions } from '../src/interface/database.interface';
 import { childrenBudgetApplication } from '../src/app';
+import { country } from 'currency-codes';
 const envFile = '.env.test';
 config({ path: resolve(process.cwd(), envFile) });
+const CURRENCY = country('israel')[0].code;
 
 const postgresql = {
   host: process.env.TEST_DB_POSTGRESQL_HOST ?? '', 
@@ -36,7 +38,7 @@ describe('Main tests', () => {
         const cid = child?.id;
         expect(cid).toBeDefined();
         expect(child?.parentId).toBe(pid);
-        const budget = await app?.createBudget({ value: 100, childId: cid!, currency: 'nis' });
+        const budget = await app?.createBudget({ value: 100, childId: cid!, currency: CURRENCY });
         const bid = budget?.id;
         expect(bid).toBeDefined();
         const transaction = await app?.createTransaction({ price: 22, budgetId: bid! });
@@ -61,7 +63,7 @@ describe('Main tests', () => {
         const cid = child?.id;
         expect(cid).toBeDefined();
         expect(child?.parentId).toBe(pid);
-        const budget = await app?.createBudget({ title: commonName, value: 11, childId: cid!, currency: 'nis' });
+        const budget = await app?.createBudget({ title: commonName, value: 11, childId: cid!, currency: CURRENCY });
         const bid = budget?.id;
         expect(bid).toBeDefined();
         const count = await app?.deleteParent({ where: { id: pid! } });

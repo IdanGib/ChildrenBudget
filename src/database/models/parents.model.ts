@@ -15,8 +15,5 @@ export const createParentModel = (sequelize: Sequelize) =>
         },
         imageUrl: {
             type: DataTypes.STRING
-        },
-        email: {
-            type: DataTypes.STRING
         }
     }, { paranoid: PARANOID_TABLES });

@@ -20,6 +20,9 @@
         },
         "GetParentInfo": {
             "NO_PARENT": "parent not found"
+        },
+        "CreateBudget": {
+            "INVALID_CURRENCY": "invalid currency"
         }
     }
 }
