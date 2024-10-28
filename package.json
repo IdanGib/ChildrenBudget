@@ -7,9 +7,6 @@
     "url": "https://github.com/IdanGib/ChildrenBudget.git"
   },
   "types": "dist/src/app",
-  "publishConfig": {
-    "@idangib:registry": "https://registry.npmjs.org"
-  },
   "main": "dist/src/app",
   "scripts": {
     "test": "jest",
